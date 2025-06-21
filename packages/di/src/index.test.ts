@@ -1,99 +1,121 @@
-import { describe, expect, it } from 'bun:test';
+import { beforeAll, describe, expect, it, jest } from 'bun:test';
 import { Container } from '.';
 
 const DEPENDENCY_TOKENS = {
     mockController: 'MockController',
     mockService: 'MockService',
-    mockRepository: 'MockRepository',
-    mockDatabase: 'MockDatabase',
-    mockOtherRepository: 'MockOtherRepository',
-    mockOtherDatabase: 'MockDatabase',
+    mockUserRepository: 'MockUserRepository',
+    mockUserDatabase: 'MockUserDatabase',
+    mockUsersTableName: 'MockUsersTableName',
+    mockSubscriptionRepository: 'MockSubscriptionRepository',
+    mockSubscriptionDatabase: 'MockSubscriptionDatabase',
+    mockSubscriptionsTableName: 'MockSubscriptionsTableName',
 };
 
 class MockController {
     static inject = [DEPENDENCY_TOKENS.mockService];
-    constructor(private mockService: MockService) {}
-
-    getDependencies() {
-        const deps = this.mockService.getDependencies();
-        return [...MockController.inject, ...deps];
-    }
+    constructor(public mockService: MockService) {}
 }
 
 class MockService {
-    static inject = [DEPENDENCY_TOKENS.mockRepository, DEPENDENCY_TOKENS.mockOtherRepository];
-    constructor(private mockRepository: MockRepository, private mockOtherRepository: MockOtherRepository) {}
+    static inject = [
+        DEPENDENCY_TOKENS.mockUserRepository,
+        DEPENDENCY_TOKENS.mockSubscriptionRepository,
+    ];
+    constructor(
+        public mockUserRepository: MockUserRepository,
+        public mockSubscriptionRepository: MockSubscriptionRepository,
+    ) {}
+}
 
-    getDependencies() {
-        const repoDeps = this.mockRepository.getDependencies();
-        const otherRepoDeps = this.mockOtherRepository.getDependencies();
+class MockSubscriptionRepository {
+    static inject = [
+        DEPENDENCY_TOKENS.mockSubscriptionDatabase,
+        DEPENDENCY_TOKENS.mockSubscriptionsTableName,
+    ];
+    public tableName: string;
 
-        return [...MockService.inject, ...repoDeps, ...otherRepoDeps];
+    constructor(public mockDatabase: any, subscriptionTable: string) {
+        this.tableName = subscriptionTable;
     }
 }
 
-class MockOtherRepository {
-    static inject = [DEPENDENCY_TOKENS.mockOtherDatabase];
-    constructor(private mockOtherDatabase: any) {}
+class MockUserRepository {
+    static inject = [DEPENDENCY_TOKENS.mockUserDatabase, DEPENDENCY_TOKENS.mockUsersTableName];
+    public tableName: string;
 
-    getDependencies() {
-        const deps = this.mockOtherDatabase.getDependencies();
-
-        return [...MockOtherRepository.inject, ...deps];
+    constructor(public mockDatabase: any, userTable: string) {
+        this.tableName = userTable;
     }
 }
 
-class MockRepository {
-    static inject = [DEPENDENCY_TOKENS.mockDatabase];
-    constructor(private mockDatabase: any) {}
-
-    getDependencies() {
-        const deps = this.mockDatabase.getDependencies();
-
-        return [...MockRepository.inject, ...deps];
-    }
-}
-
-class MockDatabase {
-    constructor() {}
-
-    getDependencies() {
-        return ['MockDatabase -> No Deps'];
-    }
-}
-
-class MockOtherDatabase {
-    constructor() {}
-    getDependencies() {
-        return ['MockOtherDatabase -> No Deps'];
-    }
-}
+const mockUserDb = jest.fn().mockImplementationOnce(() => 'mockDb');
+const mockUserTableName = 'users';
+const mockSubscriptionDb = jest.fn().mockImplementationOnce(() => 'mockDB');
+const mockSubscriptionTableName = 'subscriptions';
 
 describe('Container', () => {
-    it('Should work', () => {
-        const container = new Container();
-
+    const container = new Container();
+    beforeAll(() => {
         container.registerTokens(DEPENDENCY_TOKENS);
 
         container.register(DEPENDENCY_TOKENS.mockController, MockController);
         container.register(DEPENDENCY_TOKENS.mockService, MockService);
-        container.register(DEPENDENCY_TOKENS.mockRepository, MockRepository);
-        container.register(DEPENDENCY_TOKENS.mockDatabase, MockDatabase);
-        container.register(DEPENDENCY_TOKENS.mockOtherRepository, MockOtherRepository);
-        container.register(DEPENDENCY_TOKENS.mockOtherDatabase, MockOtherDatabase);
+        container.register(DEPENDENCY_TOKENS.mockUserRepository, MockUserRepository);
+        container.register(DEPENDENCY_TOKENS.mockUserDatabase, mockUserDb, 'asFunction');
+        container.register(DEPENDENCY_TOKENS.mockUsersTableName, mockUserTableName, 'asValue');
+        container.register(
+            DEPENDENCY_TOKENS.mockSubscriptionRepository,
+            MockSubscriptionRepository,
+        );
+        container.register(
+            DEPENDENCY_TOKENS.mockSubscriptionDatabase,
+            mockSubscriptionDb,
+            'asFunction',
+        );
+        container.register(
+            DEPENDENCY_TOKENS.mockSubscriptionsTableName,
+            mockSubscriptionTableName,
+            'asValue',
+        );
+    });
+    it('Should resolve controller correctly', () => {
+        const sut = container.resolve<MockController>(DEPENDENCY_TOKENS.mockController);
 
-        const controller = container.resolve<MockController>(DEPENDENCY_TOKENS.mockController);
+        expect(sut).toBeDefined();
+        expect(sut).toBeInstanceOf(MockController);
+        expect(sut.mockService).toBeDefined();
+        expect(sut.mockService).toBeInstanceOf(MockService);
+    });
 
-        const depsList = controller.getDependencies();
+    it('Should resolve service correctly', () => {
+        const sut = container.resolve<MockService>(DEPENDENCY_TOKENS.mockService);
 
-        expect(depsList).toEqual([
-            'MockService',
-            'MockRepository',
-            'MockOtherRepository',
-            'MockDatabase',
-            'MockOtherDatabase -> No Deps',
-            'MockDatabase',
-            'MockOtherDatabase -> No Deps',
-        ]);
+        expect(sut).toBeDefined();
+        expect(sut).toBeInstanceOf(MockService);
+        expect(sut.mockSubscriptionRepository).toBeDefined();
+        expect(sut.mockSubscriptionRepository).toBeInstanceOf(MockSubscriptionRepository);
+        expect(sut.mockUserRepository).toBeDefined();
+        expect(sut.mockUserRepository).toBeInstanceOf(MockUserRepository);
+    });
+
+    it('Should resolve user repository correctly', () => {
+        const sut = container.resolve<MockUserRepository>(DEPENDENCY_TOKENS.mockUserRepository);
+
+        expect(sut).toBeDefined();
+        expect(sut).toBeInstanceOf(MockUserRepository);
+        expect(sut.mockDatabase).toBeDefined();
+        expect(sut.tableName).toBe(mockUserTableName);
+    });
+
+    it('Should resolve subscription repository correctly', () => {
+        const sut = container.resolve<MockSubscriptionRepository>(
+            DEPENDENCY_TOKENS.mockSubscriptionRepository,
+        );
+
+        expect(sut).toBeDefined();
+        expect(sut).toBeInstanceOf(MockSubscriptionRepository);
+        expect(sut.mockDatabase).toBeDefined();
+        expect(sut.tableName).toBe(mockSubscriptionTableName);
     });
 });
