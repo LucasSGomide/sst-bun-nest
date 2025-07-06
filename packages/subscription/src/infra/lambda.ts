@@ -1,24 +1,16 @@
-import type { APIGatewayProxyEvent, APIGatewayProxyResultV2 } from 'aws-lambda';
+import type { Request, Response } from 'express';
 import { databaseConnection } from './database/connection';
 import { subscriptionsSchema } from './database/schemas/subscriptions';
 
-export async function helloWorldHandler(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResultV2> {
+export async function helloWorldHandler(req: Request, res: Response): Promise<void> {
     try {
         const database = databaseConnection();
 
         const data = await database.select().from(subscriptionsSchema);
 
-        return {
-            statusCode: 200,
-            body: JSON.stringify({ message: 'Hello World', data }),
-            headers: { 'Content-Type': 'application/json' },
-        };
+        res.status(200).json({ message: 'Hello World', data });
     } catch (err) {
         console.error(err);
-        return {
-            statusCode: 500,
-            body: JSON.stringify({ message: 'Internal Error' }),
-            headers: { 'Content-Type': 'application/json' },
-        };
+        res.status(500).json({ message: 'Internal Error' });
     }
 }
