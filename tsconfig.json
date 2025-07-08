@@ -27,6 +27,12 @@
         "noPropertyAccessFromIndexSignature": false,
 
         "experimentalDecorators": true,
-        "emitDecoratorMetadata": true
-    }
+        "emitDecoratorMetadata": true,
+        "baseUrl": ".",
+        "paths": {
+            "@shared/*": ["packages/shared/src/*"],
+            "@subscription/*": ["packages/subscription/src/*"]
+        }
+    },
+    "include": [".","packages/**/*"]
 }
