@@ -1,4 +1,3 @@
-import esbuildPluginTsc from 'esbuild-plugin-tsc';
 import { databaseUrl } from './secrets';
 
 export const api = new sst.aws.ApiGatewayV2('ApiGateway', {
@@ -12,21 +11,11 @@ api.route('ANY /subscriptions', {
     environment: {
         DATABASE_URL: databaseUrl.value,
     },
-    nodejs: {
-        esbuild: {
-            plugins: [esbuildPluginTsc({ tsconfigPath: '../tsconfig.json' })],
-        },
-    },
 });
 
 api.route('ANY /subscriptions/{proxy+}', {
     handler: 'packages/subscription/src/infra/api.subscriptionsHandler',
     environment: {
         DATABASE_URL: databaseUrl.value,
-    },
-    nodejs: {
-        esbuild: {
-            plugins: [esbuildPluginTsc({ tsconfigPath: '../tsconfig.json' })],
-        },
     },
 });

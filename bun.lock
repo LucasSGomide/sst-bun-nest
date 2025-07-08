@@ -9,7 +9,6 @@
         "@neondatabase/serverless": "^1.0.1",
         "cors": "^2.8.5",
         "drizzle-orm": "^0.44.2",
-        "esbuild-plugin-tsc": "^0.5.0",
         "express": "^5.1.0",
         "reflect-metadata": "^0.2.2",
         "sst": "3.17.6",
@@ -213,8 +212,6 @@
 
     "esbuild": ["esbuild@0.25.5", "", { "optionalDependencies": { "@esbuild/aix-ppc64": "0.25.5", "@esbuild/android-arm": "0.25.5", "@esbuild/android-arm64": "0.25.5", "@esbuild/android-x64": "0.25.5", "@esbuild/darwin-arm64": "0.25.5", "@esbuild/darwin-x64": "0.25.5", "@esbuild/freebsd-arm64": "0.25.5", "@esbuild/freebsd-x64": "0.25.5", "@esbuild/linux-arm": "0.25.5", "@esbuild/linux-arm64": "0.25.5", "@esbuild/linux-ia32": "0.25.5", "@esbuild/linux-loong64": "0.25.5", "@esbuild/linux-mips64el": "0.25.5", "@esbuild/linux-ppc64": "0.25.5", "@esbuild/linux-riscv64": "0.25.5", "@esbuild/linux-s390x": "0.25.5", "@esbuild/linux-x64": "0.25.5", "@esbuild/netbsd-arm64": "0.25.5", "@esbuild/netbsd-x64": "0.25.5", "@esbuild/openbsd-arm64": "0.25.5", "@esbuild/openbsd-x64": "0.25.5", "@esbuild/sunos-x64": "0.25.5", "@esbuild/win32-arm64": "0.25.5", "@esbuild/win32-ia32": "0.25.5", "@esbuild/win32-x64": "0.25.5" }, "bin": { "esbuild": "bin/esbuild" } }, "sha512-P8OtKZRv/5J5hhz0cUAdu/cLuPIKXpQl1R9pZtvmHWQvrAUVd0UNIPT4IB4W3rNOqVO0rlqHmCIbSwxh/c9yUQ=="],
 
-    "esbuild-plugin-tsc": ["esbuild-plugin-tsc@0.5.0", "", { "dependencies": { "strip-comments": "^2.0.1" }, "peerDependencies": { "typescript": "^4.0.0 || ^5.0.0" } }, "sha512-t9j90NnMhAGWzS0SKX3zNa/XeWcUanqKaFe36CSmXiB2nYFdaSzKY9pBZTvGV7NGImxE1BktOOlVpQyYnUTVGg=="],
-
     "esbuild-register": ["esbuild-register@3.6.0", "", { "dependencies": { "debug": "^4.3.4" }, "peerDependencies": { "esbuild": ">=0.12 <1" } }, "sha512-H2/S7Pm8a9CL1uhp9OvjwrBh5Pvx0H8qVOxNu8Wed9Y7qv56MPtq+GGM8RJpq6glYJn9Wspr8uw7l55uyinNeg=="],
 
     "escape-html": ["escape-html@1.0.3", "", {}, "sha512-NiSupZ4OeuGwr68lGIeym/ksIZMJodUGOSCZ/FSnTxcrekbvqrgdUxlJOMpijaKZVjAJrWrGs/6Jy8OMuyj9ow=="],
@@ -408,8 +405,6 @@
     "sst-win32-x86": ["sst-win32-x86@3.17.6", "", { "os": "win32", "cpu": "none" }, "sha512-zV7TJWPJN9PmIXr15iXFSs0tbGsa52oBR3+xiKrUj2qj9XsZe7HBFwskRnHyiFq0durZY9kk9ZtoVlpuUuzr1g=="],
 
     "statuses": ["statuses@2.0.2", "", {}, "sha512-DvEy55V3DB7uknRo+4iOGT5fP1slR8wQohVdknigZPMpMstaKJQWhwiYBACJE3Ul2pTnATihhBYnRhZQHGBiRw=="],
-
-    "strip-comments": ["strip-comments@2.0.1", "", {}, "sha512-ZprKx+bBLXv067WTCALv8SSz5l2+XhpYCsVtSqlMnkAXMWDq+/ekVbl1ghqP9rUHTzv6sm/DwCOiYutU/yp1fw=="],
 
     "subscription": ["subscription@workspace:packages/subscription"],
 
