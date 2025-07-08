@@ -12,7 +12,7 @@ export class SubscriptionController {
         try {
             const data = await this.subscriptionRepository.findAll();
 
-            res.status(200).json({ message: 'Hello World', data });
+            res.status(200).json({ data });
         } catch (error) {
             console.error(error);
             res.status(500).json({ message: 'Internal Error' });
