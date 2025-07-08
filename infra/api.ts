@@ -11,11 +11,33 @@ api.route('ANY /subscriptions', {
     environment: {
         DATABASE_URL: databaseUrl.value,
     },
+    nodejs: {
+        esbuild: {
+            external: [
+                '@nestjs/microservices',
+                '@nestjs/websockets',
+                '@nestjs/platform-express',
+                'class-transformer',
+                'class-validator',
+            ],
+        },
+    },
 });
 
 api.route('ANY /subscriptions/{proxy+}', {
     handler: 'packages/subscription/src/infra/api.subscriptionsHandler',
     environment: {
         DATABASE_URL: databaseUrl.value,
+    },
+    nodejs: {
+        esbuild: {
+            external: [
+                '@nestjs/microservices',
+                '@nestjs/websockets',
+                '@nestjs/platform-express',
+                'class-transformer',
+                'class-validator',
+            ],
+        },
     },
 });

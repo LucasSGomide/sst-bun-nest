@@ -1,21 +1,17 @@
-import { inject, injectable } from 'tsyringe';
-import type { Request, Response } from 'express';
+import { Controller, Get, Inject } from '@nestjs/common';
 import type { ISubscriptionRepository } from '../domain/interfaces/subscription-repository.interface';
 
-@injectable()
+@Controller('subscriptions')
 export class SubscriptionController {
     constructor(
-        @inject('SubscriptionRepository') private subscriptionRepository: ISubscriptionRepository,
+        @Inject('ISubscriptionRepository')
+        private readonly subscriptionRepository: ISubscriptionRepository,
     ) {}
 
-    async getAll(req: Request, res: Response) {
-        try {
-            const data = await this.subscriptionRepository.findAll();
-
-            res.status(200).json({ data });
-        } catch (error) {
-            console.error(error);
-            res.status(500).json({ message: 'Internal Error' });
-        }
+    @Get()
+    async getAll() {
+        return {
+            data: await this.subscriptionRepository.findAll(),
+        };
     }
 }
