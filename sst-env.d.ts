@@ -5,14 +5,6 @@
 
 declare module "sst" {
   export interface Resource {
-    "ApiGateway": {
-      "type": "sst.aws.ApiGatewayV2"
-      "url": string
-    }
-    "DatabaseURL": {
-      "type": "sst.sst.Secret"
-      "value": string
-    }
   }
 }
 /// <reference path="sst-env.d.ts" />
